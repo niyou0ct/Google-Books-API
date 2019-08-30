@@ -1,0 +1,33 @@
+{
+  "name": "Google-Books-API",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/niyou0ct/Google-Books-API.git",
+  "author": "niiuchi <niiuchi@fork.co.jp>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "axios": "^0.19.0",
+    "concurrently": "^4.1.2",
+    "pug": "^2.0.4",
+    "pug-cli": "^1.0.0-alpha6",
+    "rimraf": "^3.0.0",
+    "stylus": "^0.54.7",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.6.2",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist",
+    "build:stylus": "yarn stylus src -o ./dist",
+    "build:pug": "yarn pug src -o ./dist",
+    "build:script": "webpack --mode=production --progress --hide-modules",
+    "dev:stylus": "yarn stylus src -o ./dist -w",
+    "dev:pug": "yarn pug src -o ./dist -w",
+    "dev:script": "webpack-dev-server --hot --inline --watch-content-base --content-base dist/",
+    "dev": "yarn dev:pug & yarn dev:stylus & yarn dev:script",
+    "build": "yarn clean && yarn build:pug && yarn build:stylus && yarn build:script"
+  }
+}
