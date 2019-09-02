@@ -6,16 +6,7 @@ html(lang="en")
     meta(name="viewport" content="width=device-width,initial-scale=1.0")
     title Books API sample
   body
-    .gb
-      .gb-search-box
-        h2.gb-search-box 書籍検索ボックス
-        input(type="text" name="keyword")
-        button(type="button" name="search") 検索
-      .gb-result
-        ul.gb-list
-          li.gb-list__item
-            img.gb-list__img(src="")
-            h3.gb-list__title
-            .gb-list__desc
-  
+    #app
+      search-books
+
   script(src="index.js")
