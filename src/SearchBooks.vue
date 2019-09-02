@@ -20,47 +20,48 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import axios from 'axios';
-import { SearchBooksPayloadObj } from './store/types';
+import { SearchBooksPayloadObj } from './store/search-book/types';
+import SeachBookModule from './store/search-book/index';
 
 @Component
 export default class SearchBooks extends Vue {
   protected keywords: string = ''
 
   protected get bookItems(): any {
-    return this.$store.state.books;
+    return SeachBookModule.books;
   }
 
-  protected get pageIndex(): string {
-    return this.$store.state.pageIndex;
+  protected get pageIndex(): number {
+    return SeachBookModule.pageIndex;
   }
 
   protected get loadable(): boolean {
-    return this.$store.getters.loadable;
+    return SeachBookModule.loadable;
   }
 
   protected get searchedWord(): string {
-    return this.$store.state.keywords;
+    return SeachBookModule.keywords;
   }
 
-  protected get isLoading(): string {
-    return this.$store.state.isLoading;
+  protected get isLoading(): boolean {
+    return SeachBookModule.isLoading;
   }
 
   protected setLoadingTrue(): void {
-    this.$store.commit('setLoadingTrue');
+    SeachBookModule.setLoadingTrue()
   }
 
   protected async fetchGoogleBookApi(): Promise<void> {
-    await this.$store.commit('resetSearchBooks');
+    await SeachBookModule.resetSearchBooks()
     this.setLoadingTrue()
 
     const params: string = this.keywords.replace(/[\u{20}\u{3000}]/u, '+')
     const data: SearchBooksPayloadObj = {
       keywords: params,
-      pageIndex: '0',
+      pageIndex: 0,
     };
-    await this.$store.dispatch('getGoogleBooks', data);
-    this.$store.commit('setSearchKeywords', data.keywords);
+    await SeachBookModule.getGoogleBooks(data)
+    SeachBookModule.setSearchKeywords(data.keywords)
   }
 
   protected async loadMoreResults(): Promise<void> {
@@ -69,7 +70,7 @@ export default class SearchBooks extends Vue {
       keywords: this.searchedWord,
       pageIndex: this.pageIndex,
     }
-    await this.$store.dispatch('getGoogleBooks', data);
+    await SeachBookModule.getGoogleBooks(data)
   }
 }
 </script>

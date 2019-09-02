@@ -9,3 +9,4 @@ export default new Vue({
     'search-books': SearchBooks,
   },
 }).$mount('#app');
+

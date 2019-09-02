@@ -46,5 +46,6 @@ module.exports = {
     'max-len': 'off',
     'class-methods-use-this': 'off',
     'no-empty-function': 'off',
+    'lines-between-class-members': 'off'
   }
 };
