@@ -62,8 +62,7 @@ class SearchBookModule extends VuexModule {
   @Action({})
   public async getGoogleBooks(payload: SearchBooksPayloadObj): Promise<void> {
     const { data, error }: any = await new ApiMethods().fetchGoogleBooksApi(payload);
-    this.context.commit('setLoadingOrNot', false)
-
+    this.setLoadingOrNot(false)
 
     if (data) {
       const info: SetSearchBooksObj = {
