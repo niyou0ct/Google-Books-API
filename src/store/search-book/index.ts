@@ -50,16 +50,6 @@ class SearchBookModule extends VuexModule {
   }
 
   @Mutation
-  public setLoadingFalse(): void {
-    this.isLoading = false
-  }
-
-  @Mutation
-  public setLoadingTrue(): void {
-    this.isLoading = true
-  }
-
-  @Mutation
   public setThereOrNot(payload: boolean): void {
     this.isThere = payload
   }
