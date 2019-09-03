@@ -26,62 +26,62 @@ import { Vue, Component, Watch } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 import axios from 'axios';
 import { SearchBooksPayloadObj } from './store/search-book/types';
-import SeachBookModule from './store/search-book/index';
+import SearchBookModule from './store/search-book/index';
 
 @Component
 export default class SearchBooks extends Vue {
   protected keywords: string = ''
 
   protected get bookItems(): any {
-    return SeachBookModule.books;
+    return SearchBookModule.books;
   }
 
   protected get pageIndex(): number {
-    return SeachBookModule.pageIndex;
+    return SearchBookModule.pageIndex;
   }
 
   protected get canLoad(): boolean {
-    return SeachBookModule.loadable;
+    return SearchBookModule.loadable;
   }
 
   protected get searchedWord(): string {
-    return SeachBookModule.keywords;
+    return SearchBookModule.keywords;
   }
 
   protected get isLoading(): boolean {
-    return SeachBookModule.isLoading;
+    return SearchBookModule.isLoading;
   }
 
   protected get isThere(): boolean {
-    return SeachBookModule.isThere;
+    return SearchBookModule.isThere;
   }
 
   protected get isApiError(): boolean {
-    return SeachBookModule.isApiError;
+    return SearchBookModule.isApiError;
   }
 
 
   protected async fetchGoogleBookApi(): Promise<void> {
-    await SeachBookModule.resetSearchBooks()
-    SeachBookModule.setLoadingOrNot(true)
-    SeachBookModule.setThereOrNot(true)
+    await SearchBookModule.resetSearchBooks()
+    SearchBookModule.setLoadingOrNot(true)
+    SearchBookModule.setThereOrNot(true)
 
     const params: string = this.keywords.replace(/[\u{20}\u{3000}]/u, '+')
     const data: SearchBooksPayloadObj = {
       keywords: params,
       pageIndex: 0,
     };
-    await SeachBookModule.getGoogleBooks(data)
-    SeachBookModule.setSearchKeywords(data.keywords)
+    await SearchBookModule.getGoogleBooks(data)
+    SearchBookModule.setSearchKeywords(data.keywords)
   }
 
   protected async loadMoreResults(): Promise<void> {
-    SeachBookModule.setLoadingOrNot(true)
+    SearchBookModule.setLoadingOrNot(true)
     const data: SearchBooksPayloadObj = {
       keywords: this.searchedWord,
       pageIndex: this.pageIndex,
     }
-    await SeachBookModule.getGoogleBooks(data)
+    await SearchBookModule.getGoogleBooks(data)
   }
 }
 </script>
