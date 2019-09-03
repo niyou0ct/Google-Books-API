@@ -6,13 +6,16 @@
     button(type="button" name="search" @click="fetchGoogleBookApi") 検索
   .gb-result
     ul.gb-list
-      li.gb-list__item(v-if="bookItems.length > 0" v-for="(book, index) in bookItems" :key="index")
-        template(v-if="book.imageLinks !== undefined && book.imageLinks.thumbnail !== undefined")
-          img.gb-list__img(:src="book.imageLinks.thumbnail")
-        h3.gb-list__title {{ book.title }}
-        .gb-authors
-          h4.gb-author(v-for="(author, authorIndex) in book.authors" :key="authorIndex") {{ author }}
-        .gb-list__desc(v-if="book.description !== undefined") {{ book.description}}
+      template(v-if="isThere")
+        li.gb-list__item(v-for="(book, index) in bookItems" :key="index")
+          template(v-if="book.imageLinks !== undefined && book.imageLinks.thumbnail !== undefined")
+            img.gb-list__img(:src="book.imageLinks.thumbnail")
+          h3.gb-list__title {{ book.title }}
+          .gb-authors
+            h4.gb-author(v-for="(author, authorIndex) in book.authors" :key="authorIndex") {{ author }}
+          .gb-list__desc(v-if="book.description !== undefined") {{ book.description}}
+      template(v-else)
+        li 検索にヒットしませんでした
     .gb-loading(v-show="isLoading") 読み込み中
     button(v-if="loadable" type="button" @click="loadMoreResults") Read More
 </template>
@@ -29,6 +32,7 @@ export default class SearchBooks extends Vue {
   protected keywords: string = ''
 
   protected get bookItems(): any {
+    console.log(SeachBookModule.books.length)
     return SeachBookModule.books;
   }
 
@@ -48,6 +52,10 @@ export default class SearchBooks extends Vue {
     return SeachBookModule.isLoading;
   }
 
+  protected get isThere(): boolean {
+    return SeachBookModule.isThere;
+  }
+
   protected setLoadingTrue(): void {
     SeachBookModule.setLoadingTrue()
   }
@@ -55,6 +63,7 @@ export default class SearchBooks extends Vue {
   protected async fetchGoogleBookApi(): Promise<void> {
     await SeachBookModule.resetSearchBooks()
     this.setLoadingTrue()
+    SeachBookModule.setThereOrNot(true)
 
     const params: string = this.keywords.replace(/[\u{20}\u{3000}]/u, '+')
     const data: SearchBooksPayloadObj = {

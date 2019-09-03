@@ -15,7 +15,7 @@ class SearchBookModule extends VuexModule {
   public totalItems: number = 0
   public pageIndex: number = 0
   public isLoading: boolean = false
-  public isError: boolean = false
+  public isThere: boolean = true
 
   public get loadable(): boolean {
     return this.totalItems > this.books.length
@@ -53,6 +53,11 @@ class SearchBookModule extends VuexModule {
     this.isLoading = true
   }
 
+  @Mutation
+  public setThereOrNot(payload: boolean): void {
+    this.isThere = payload
+  }
+
   @Action({})
   public async getGoogleBooks(payload: SearchBooksPayloadObj): Promise<void> {
     const { data, error }: any = await new ApiMethods().fetchGoogleBooksApi(payload);
@@ -63,9 +68,15 @@ class SearchBookModule extends VuexModule {
         totalItems: 0,
         books: [],
       };
-      info.totalItems = data.totalItems;
-      info.books = data.items.map((item: any) => item.volumeInfo);
-      this.setSearchBooks(info)
+      if (data.totalItems !== 0) {
+        info.totalItems = data.totalItems;
+        info.books = data.items.map((item: any) => item.volumeInfo);
+        this.setSearchBooks(info)
+        this.setThereOrNot(true)
+      } else {
+        this.setSearchBooks(info)
+        this.setThereOrNot(false)
+      }
     } else {
       this.resetSearchBooks()
     }
