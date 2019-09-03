@@ -73,16 +73,16 @@ class SearchBookModule extends VuexModule {
       if (data.totalItems !== 0) {
         info.totalItems = data.totalItems;
         info.books = data.items.map((item: any) => item.volumeInfo);
-        this.context.commit('setSearchBooks', info)
-        this.context.commit('setThereOrNot', true)
+        this.setSearchBooks(info)
+        this.setThereOrNot(true)
       } else {
-        this.context.commit('setSearchBooks', info)
-        this.context.commit('setThereOrNot', false)
+        this.setSearchBooks(info)
+        this.setThereOrNot(false)
       }
-      this.context.commit('setApiErrorOrNot', false)
+      this.setApiErrorOrNot(false)
     } else {
-      this.context.commit('resetSearchBooks')
-      this.context.commit('setApiErrorOrNot', true)
+      this.resetSearchBooks()
+      this.setApiErrorOrNot(true)
     }
   }
 }
