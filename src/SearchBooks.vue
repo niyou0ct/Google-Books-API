@@ -17,7 +17,8 @@
       template(v-else)
         li 検索にヒットしませんでした
     .gb-loading(v-show="isLoading") 読み込み中
-    button(v-if="loadable" type="button" @click="loadMoreResults") Read More
+    .gb-api-error(v-show="isApiError") 通信エラーです
+    button(v-if="canLoad" type="button" @click="loadMoreResults") Read More
 </template>
 
 <script lang="ts">
@@ -32,7 +33,6 @@ export default class SearchBooks extends Vue {
   protected keywords: string = ''
 
   protected get bookItems(): any {
-    console.log(SeachBookModule.books.length)
     return SeachBookModule.books;
   }
 
@@ -40,7 +40,7 @@ export default class SearchBooks extends Vue {
     return SeachBookModule.pageIndex;
   }
 
-  protected get loadable(): boolean {
+  protected get canLoad(): boolean {
     return SeachBookModule.loadable;
   }
 
@@ -56,13 +56,14 @@ export default class SearchBooks extends Vue {
     return SeachBookModule.isThere;
   }
 
-  protected setLoadingTrue(): void {
-    SeachBookModule.setLoadingTrue()
+  protected get isApiError(): boolean {
+    return SeachBookModule.isApiError;
   }
+
 
   protected async fetchGoogleBookApi(): Promise<void> {
     await SeachBookModule.resetSearchBooks()
-    this.setLoadingTrue()
+    SeachBookModule.setLoadingOrNot(true)
     SeachBookModule.setThereOrNot(true)
 
     const params: string = this.keywords.replace(/[\u{20}\u{3000}]/u, '+')
@@ -75,7 +76,7 @@ export default class SearchBooks extends Vue {
   }
 
   protected async loadMoreResults(): Promise<void> {
-    this.setLoadingTrue()
+    SeachBookModule.setLoadingOrNot(true)
     const data: SearchBooksPayloadObj = {
       keywords: this.searchedWord,
       pageIndex: this.pageIndex,

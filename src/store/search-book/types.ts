@@ -4,7 +4,8 @@ export interface SearchBookState {
   totalItems: number
   pageIndex: number
   isLoading: boolean
-  isError: boolean
+  isThere: boolean
+  isApiError: boolean
 }
 
 export interface SearchBooksPayloadObj {

@@ -16,6 +16,7 @@ class SearchBookModule extends VuexModule {
   public pageIndex: number = 0
   public isLoading: boolean = false
   public isThere: boolean = true
+  public isApiError: boolean = false
 
   public get loadable(): boolean {
     return this.totalItems > this.books.length
@@ -44,6 +45,11 @@ class SearchBookModule extends VuexModule {
   }
 
   @Mutation
+  public setLoadingOrNot(payload: boolean): void {
+    this.isLoading = payload
+  }
+
+  @Mutation
   public setLoadingFalse(): void {
     this.isLoading = false
   }
@@ -58,10 +64,16 @@ class SearchBookModule extends VuexModule {
     this.isThere = payload
   }
 
+  @Mutation
+  public setApiErrorOrNot(payload: boolean): void {
+    this.isApiError = payload
+  }
+
   @Action({})
   public async getGoogleBooks(payload: SearchBooksPayloadObj): Promise<void> {
     const { data, error }: any = await new ApiMethods().fetchGoogleBooksApi(payload);
-    this.setLoadingFalse()
+    this.context.commit('setLoadingOrNot', false)
+
 
     if (data) {
       const info: SetSearchBooksObj = {
@@ -71,14 +83,16 @@ class SearchBookModule extends VuexModule {
       if (data.totalItems !== 0) {
         info.totalItems = data.totalItems;
         info.books = data.items.map((item: any) => item.volumeInfo);
-        this.setSearchBooks(info)
-        this.setThereOrNot(true)
+        this.context.commit('setSearchBooks', info)
+        this.context.commit('setThereOrNot', true)
       } else {
-        this.setSearchBooks(info)
-        this.setThereOrNot(false)
+        this.context.commit('setSearchBooks', info)
+        this.context.commit('setThereOrNot', false)
       }
+      this.context.commit('setApiErrorOrNot', false)
     } else {
-      this.resetSearchBooks()
+      this.context.commit('resetSearchBooks')
+      this.context.commit('setApiErrorOrNot', true)
     }
   }
 }
