@@ -7,7 +7,8 @@
   .gb-result
     ul.gb-list
       li.gb-list__item(v-if="bookItems.length > 0" v-for="(book, index) in bookItems" :key="index")
-        img.gb-list__img(v-if="book.imageLinks.thumbnail !== undefined" :src="book.imageLinks.thumbnail")
+        template(v-if="book.imageLinks !== undefined && book.imageLinks.thumbnail !== undefined")
+          img.gb-list__img(:src="book.imageLinks.thumbnail")
         h3.gb-list__title {{ book.title }}
         .gb-authors
           h4.gb-author(v-for="(author, authorIndex) in book.authors" :key="authorIndex") {{ author }}
